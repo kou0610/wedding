@@ -442,6 +442,29 @@ body {
 .dot-sent   { background: var(--green); }
 .dot-unsent { background: var(--muted); }
 
+.inline-select {
+  background: transparent;
+  border: 1px solid var(--gold-line);
+  color: var(--cream-dim);
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--trans);
+  max-width: 80px;
+}
+.inline-select:focus { outline: none; border-color: var(--gold); }
+.inline-select option { background: var(--bg-card); }
+.inline-select.sel-yes { color: var(--green); border-color: rgba(126,186,142,0.3); }
+.inline-select.sel-no  { color: var(--red);   border-color: rgba(217,112,112,0.25); }
+
+.inline-check {
+  width: 15px; height: 15px;
+  accent-color: var(--gold);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
 /* ── DECISIONS ── */
 .decisions-grid {
   display: grid;

@@ -300,7 +300,7 @@ function renderGuests() {
             <table class="guest-table">
               <thead><tr>
                 <th>お名前</th><th>属性</th><th>連絡</th>
-                <th>出欠</th><th>招待状</th><th>食事制限</th><th></th>
+                <th>出欠</th><th>招待状</th><th>備考</th><th></th>
               </tr></thead>
               <tbody>${rows}</tbody>
             </table>
@@ -335,7 +335,7 @@ function openGuestModal(id = null) {
     { id: 'g-contact', label: '連絡',                type: 'select', value: g?.contacted ? '済み' : '未', opts: ['未', '済み'] },
     { id: 'g-attend',  label: '出欠',                type: 'select', value: g?.attendance      || '未確認', opts: ATTEND_OPTS },
     { id: 'g-invite',  label: '招待状',              type: 'select', value: g?.invitationSent ? '送付済み' : '未送付', opts: ['未送付', '送付済み'] },
-    { id: 'g-meal',    label: '食事制限・アレルギー', type: 'text',   value: g?.mealRestriction || '' },
+    { id: 'g-meal',    label: '備考',                 type: 'text',   value: g?.mealRestriction || '' },
   ], () => {
     const name = document.getElementById('g-name').value.trim();
     if (!name) return;

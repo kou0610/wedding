@@ -200,10 +200,22 @@ on('filter-todo-status', 'change', renderTodos);
 //  GUESTS
 // ─────────────────────────────────────
 let guests = {};
-const GUEST_GROUPS  = ['シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', 'GS（凜）', '後藤家', '小澤家', 'その他'];
-const ATTEND_OPTS   = ['未確認', '出席', '欠席'];
+const GUEST_GROUPS  = [
+  '後藤家', '小澤家',
+  'シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', '開成',
+  'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ',
+  'その他'
+];
+const ATTEND_OPTS = ['未確認', '出席', '欠席'];
 
-const GROUP_ORDER  = ['後藤家', '小澤家', 'シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', 'GS（凜）', 'その他'];
+const GROUP_ORDER = [
+  '後藤家', '小澤家',
+  'シスC', '茂木研', '学科同期（共通）',
+  'bestiee（弘）', '開成',
+  'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ',
+  'その他'
+];
+
 const GROUP_COLORS = {
   '後藤家':        { text: '#c9a96e', bg: 'rgba(201,169,110,0.12)', border: 'rgba(201,169,110,0.35)' },
   '小澤家':        { text: '#d48fa0', bg: 'rgba(212,143,160,0.12)', border: 'rgba(212,143,160,0.35)' },
@@ -211,7 +223,13 @@ const GROUP_COLORS = {
   '茂木研':        { text: '#9678c8', bg: 'rgba(150,120,200,0.10)', border: 'rgba(150,120,200,0.30)' },
   '学科同期（共通）': { text: '#6aa0dc', bg: 'rgba(106,160,220,0.10)', border: 'rgba(106,160,220,0.30)' },
   'bestiee（弘）': { text: '#dcaa50', bg: 'rgba(220,170,80,0.10)',  border: 'rgba(220,170,80,0.30)'  },
+  '開成':          { text: '#78b4a0', bg: 'rgba(120,180,160,0.10)', border: 'rgba(120,180,160,0.30)' },
   'GS（凜）':      { text: '#c878b4', bg: 'rgba(200,120,180,0.10)', border: 'rgba(200,120,180,0.30)' },
+  '中学・高校同期': { text: '#e09060', bg: 'rgba(224,144,96,0.10)',  border: 'rgba(224,144,96,0.30)'  },
+  'AIESEC':        { text: '#6890dc', bg: 'rgba(104,144,220,0.10)', border: 'rgba(104,144,220,0.30)' },
+  'TED x UTokyo':  { text: '#dc7878', bg: 'rgba(220,120,120,0.10)', border: 'rgba(220,120,120,0.30)' },
+  'ECM':           { text: '#78c890', bg: 'rgba(120,200,144,0.10)', border: 'rgba(120,200,144,0.30)' },
+  'パリ':           { text: '#b4a0dc', bg: 'rgba(180,160,220,0.10)', border: 'rgba(180,160,220,0.30)' },
   'その他':        { text: '#7a7090', bg: 'rgba(90,80,112,0.10)',   border: 'rgba(90,80,112,0.30)'   },
 };
 

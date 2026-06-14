@@ -200,8 +200,20 @@ on('filter-todo-status', 'change', renderTodos);
 //  GUESTS
 // ─────────────────────────────────────
 let guests = {};
-const GUEST_GROUPS  = ['学科同期（共通）', 'bestiee（弘）', 'GS（凜）', '家族（弘）', '家族（凜）', 'その他'];
+const GUEST_GROUPS  = ['シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', 'GS（凜）', '後藤家', '小澤家', 'その他'];
 const ATTEND_OPTS   = ['未確認', '出席', '欠席'];
+
+const GROUP_ORDER  = ['後藤家', '小澤家', 'シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', 'GS（凜）', 'その他'];
+const GROUP_COLORS = {
+  '後藤家':        { text: '#c9a96e', bg: 'rgba(201,169,110,0.12)', border: 'rgba(201,169,110,0.35)' },
+  '小澤家':        { text: '#d48fa0', bg: 'rgba(212,143,160,0.12)', border: 'rgba(212,143,160,0.35)' },
+  'シスC':         { text: '#64b4c8', bg: 'rgba(100,180,200,0.10)', border: 'rgba(100,180,200,0.30)' },
+  '茂木研':        { text: '#9678c8', bg: 'rgba(150,120,200,0.10)', border: 'rgba(150,120,200,0.30)' },
+  '学科同期（共通）': { text: '#6aa0dc', bg: 'rgba(106,160,220,0.10)', border: 'rgba(106,160,220,0.30)' },
+  'bestiee（弘）': { text: '#dcaa50', bg: 'rgba(220,170,80,0.10)',  border: 'rgba(220,170,80,0.30)'  },
+  'GS（凜）':      { text: '#c878b4', bg: 'rgba(200,120,180,0.10)', border: 'rgba(200,120,180,0.30)' },
+  'その他':        { text: '#7a7090', bg: 'rgba(90,80,112,0.10)',   border: 'rgba(90,80,112,0.30)'   },
+};
 
 function loadGuests() {
   dbGet('guests', data => {
@@ -213,8 +225,9 @@ function loadGuests() {
 }
 
 function renderGuests() {
-  const tbody = document.getElementById('guest-tbody');
-  if (!tbody) return;
+  const container = document.getElementById('guest-sections');
+  if (!container) return;
+
   const q  = (document.getElementById('guest-search')?.value || '').toLowerCase();
   const fg = val('filter-guest-group');
   const fa = val('filter-guest-attend');
@@ -224,47 +237,76 @@ function renderGuests() {
   if (fg) items = items.filter(([, g]) => g.group === fg);
   if (fa) items = items.filter(([, g]) => g.attendance === fa);
 
-  items.sort(([, a], [, b]) =>
-    (a.group || '').localeCompare(b.group || '') || (a.name || '').localeCompare(b.name || '')
-  );
-
   if (!items.length) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic">見つかりません</td></tr>`;
+    container.innerHTML = emptyState('❋', '見つかりません');
     return;
   }
 
+  // グループ別に振り分け
+  const grouped = {};
+  items.forEach(([id, g]) => {
+    const grp = g.group || 'その他';
+    if (!grouped[grp]) grouped[grp] = [];
+    grouped[grp].push([id, g]);
+  });
+
+  // 定義済み順 → 未定義グループを末尾に
+  const order = [...GROUP_ORDER, ...Object.keys(grouped).filter(g => !GROUP_ORDER.includes(g))];
   const sideOpts = ['弘', '凜', '共通'];
-  tbody.innerHTML = items.map(([id, g]) => {
-    const acClass = g.attendance === '出席' ? 'sel-yes' : g.attendance === '欠席' ? 'sel-no' : '';
-    return `<tr>
-      <td style="color:var(--cream)">${esc(g.name || '')}</td>
-      <td>
-        <select class="inline-select" onchange="updateGuestField('${id}','side',this.value)">
-          <option value="">—</option>
-          ${sideOpts.map(o => `<option value="${o}" ${g.side===o?'selected':''}>${o}</option>`).join('')}
-        </select>
-      </td>
-      <td><span class="tag tag-cat" style="font-size:9px">${esc(g.group || '')}</span></td>
-      <td style="text-align:center">
-        <input type="checkbox" class="inline-check" ${g.contacted ? 'checked' : ''} onchange="updateGuestField('${id}','contacted',this.checked)">
-      </td>
-      <td>
-        <select class="inline-select ${acClass}" onchange="updateGuestField('${id}','attendance',this.value)">
-          <option value="未確認" ${(!g.attendance||g.attendance==='未確認')?'selected':''}>未確認</option>
-          <option value="出席" ${g.attendance==='出席'?'selected':''}>出席</option>
-          <option value="欠席" ${g.attendance==='欠席'?'selected':''}>欠席</option>
-        </select>
-      </td>
-      <td style="text-align:center">
-        <span class="invite-dot ${g.invitationSent ? 'dot-sent' : 'dot-unsent'}" title="${g.invitationSent ? '送付済み' : '未送付'}"></span>
-      </td>
-      <td style="font-size:12px">${esc(g.mealRestriction || '—')}</td>
-      <td>
-        <button class="btn btn-ghost btn-sm" onclick="openGuestModal('${id}')">編集</button>
-        <button class="btn btn-danger btn-sm" onclick="delGuest('${id}')">削除</button>
-      </td>
-    </tr>`;
-  }).join('');
+
+  container.innerHTML = order
+    .filter(grp => grouped[grp]?.length)
+    .map(grp => {
+      const members = grouped[grp];
+      const c = GROUP_COLORS[grp] || GROUP_COLORS['その他'];
+      const rows = members.map(([id, g]) => {
+        const acClass = g.attendance === '出席' ? 'sel-yes' : g.attendance === '欠席' ? 'sel-no' : '';
+        return `<tr>
+          <td style="color:var(--cream)">${esc(g.name || '')}</td>
+          <td>
+            <select class="inline-select" onchange="updateGuestField('${id}','side',this.value)">
+              <option value="">—</option>
+              ${sideOpts.map(o => `<option ${g.side===o?'selected':''}>${o}</option>`).join('')}
+            </select>
+          </td>
+          <td style="text-align:center">
+            <input type="checkbox" class="inline-check" ${g.contacted?'checked':''} onchange="updateGuestField('${id}','contacted',this.checked)">
+          </td>
+          <td>
+            <select class="inline-select ${acClass}" onchange="updateGuestField('${id}','attendance',this.value)">
+              <option value="未確認" ${(!g.attendance||g.attendance==='未確認')?'selected':''}>未確認</option>
+              <option value="出席" ${g.attendance==='出席'?'selected':''}>出席</option>
+              <option value="欠席" ${g.attendance==='欠席'?'selected':''}>欠席</option>
+            </select>
+          </td>
+          <td style="text-align:center">
+            <span class="invite-dot ${g.invitationSent?'dot-sent':'dot-unsent'}"></span>
+          </td>
+          <td style="font-size:12px">${esc(g.mealRestriction || '—')}</td>
+          <td>
+            <button class="btn btn-ghost btn-sm" onclick="openGuestModal('${id}')">編集</button>
+            <button class="btn btn-danger btn-sm" onclick="delGuest('${id}')">削除</button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      return `
+        <div class="guest-section" style="--gc:${c.text};--gb:${c.bg};--gbr:${c.border}">
+          <div class="guest-section-hd">
+            <span class="guest-section-name">${esc(grp)}</span>
+            <span class="guest-section-count">${members.length}人</span>
+          </div>
+          <div class="guest-table-wrap">
+            <table class="guest-table">
+              <thead><tr>
+                <th>お名前</th><th>属性</th><th>連絡</th>
+                <th>出欠</th><th>招待状</th><th>食事制限</th><th></th>
+              </tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        </div>`;
+    }).join('');
 }
 
 function updateGuestField(id, field, value) {

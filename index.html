@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOU &amp; RIN — Wedding Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-logo">✦ K &amp; R ✦</div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="ornament">✦</div>
+    <div class="names">KOU &amp; RIN</div>
+    <div class="date-label">April 24, 2027</div>
+  </div>
+  <div class="sidebar-nav">
+    <a class="nav-item" data-page="home">
+      <span class="nav-icon">⌂</span> HOME
+    </a>
+    <a class="nav-item" data-page="todo">
+      <span class="nav-icon">✓</span> TODO
+    </a>
+    <a class="nav-item" data-page="guests">
+      <span class="nav-icon">❋</span> GUESTS
+    </a>
+    <a class="nav-item" data-page="decisions">
+      <span class="nav-icon">◈</span> DECISIONS
+    </a>
+    <a class="nav-item" data-page="timeline">
+      <span class="nav-icon">◷</span> TIMELINE
+    </a>
+    <a class="nav-item" data-page="photos">
+      <span class="nav-icon">◻</span> PHOTOS
+    </a>
+  </div>
+  <div class="sidebar-footer">三井綱町倶楽部</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ── HOME ── -->
+  <section id="home" class="section">
+    <div class="hero">
+      <img src="assets/venue.jpg" alt="三井綱町倶楽部">
+      <div class="hero-overlay">
+        <div class="hero-title">Kou &amp; Rin</div>
+        <div class="hero-subtitle">APRIL 24, 2027 &nbsp;·&nbsp; 三井綱町倶楽部</div>
+      </div>
+    </div>
+
+    <div class="countdown-grid">
+      <div class="countdown-item">
+        <div class="countdown-num" id="cd-days">—</div>
+        <div class="countdown-label">DAYS</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" id="cd-hours">—</div>
+        <div class="countdown-label">HOURS</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" id="cd-mins">—</div>
+        <div class="countdown-label">MINUTES</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-num" id="cd-secs">—</div>
+        <div class="countdown-label">SECONDS</div>
+      </div>
+    </div>
+
+    <div class="home-stats">
+      <div class="stat-card">
+        <div class="stat-icon">✓</div>
+        <div>
+          <div class="stat-num" id="home-todo-count">—</div>
+          <div class="stat-name">TODO 完了</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❋</div>
+        <div>
+          <div class="stat-num" id="home-guest-count">—</div>
+          <div class="stat-name">招待者数</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">◈</div>
+        <div>
+          <div class="stat-num" id="home-confirmed-count">—</div>
+          <div class="stat-name">出席確定</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TODO ── -->
+  <section id="todo" class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">PREPARATION</div>
+      <div class="section-title">TODO リスト</div>
+      <div class="section-divider"><span>✦</span></div>
+    </div>
+    <div class="toolbar">
+      <button id="add-todo-btn" class="btn btn-gold">＋ タスクを追加</button>
+      <select id="filter-todo-cat" class="filter-select">
+        <option value="">すべてのカテゴリ</option>
+        <option>会場</option><option>衣装</option><option>料理</option>
+        <option>招待状</option><option>演出</option><option>その他</option>
+      </select>
+      <select id="filter-todo-assign" class="filter-select">
+        <option value="">担当者すべて</option>
+        <option>弘</option><option>凜</option><option>二人</option>
+      </select>
+      <select id="filter-todo-status" class="filter-select">
+        <option value="">すべて</option>
+        <option value="pending">未完了</option>
+        <option value="done">完了済み</option>
+      </select>
+    </div>
+    <div id="todo-list" class="todo-list"></div>
+  </section>
+
+  <!-- ── GUESTS ── -->
+  <section id="guests" class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">INVITATION</div>
+      <div class="section-title">ゲストリスト</div>
+      <div class="section-divider"><span>✦</span></div>
+    </div>
+    <div class="guest-stats">
+      <div class="guest-stat">
+        <div class="guest-stat-num" id="gs-total">0</div>
+        <div class="guest-stat-label">TOTAL</div>
+      </div>
+      <div class="guest-stat">
+        <div class="guest-stat-num" id="gs-confirmed" style="color:var(--green)">0</div>
+        <div class="guest-stat-label">出席</div>
+      </div>
+      <div class="guest-stat">
+        <div class="guest-stat-num" id="gs-declined" style="color:var(--red)">0</div>
+        <div class="guest-stat-label">欠席</div>
+      </div>
+      <div class="guest-stat">
+        <div class="guest-stat-num" id="gs-pending" style="color:var(--muted)">0</div>
+        <div class="guest-stat-label">未確認</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button id="add-guest-btn" class="btn btn-gold">＋ ゲストを追加</button>
+      <input id="guest-search" class="search-input" type="text" placeholder="名前で検索...">
+      <select id="filter-guest-group" class="filter-select">
+        <option value="">すべてのグループ</option>
+        <option>学科同期（共通）</option>
+        <option>bestiee（弘）</option>
+        <option>GS（凜）</option>
+        <option>家族（弘）</option>
+        <option>家族（凜）</option>
+        <option>その他</option>
+      </select>
+      <select id="filter-guest-attend" class="filter-select">
+        <option value="">出欠すべて</option>
+        <option>出席</option><option>欠席</option><option>未確認</option>
+      </select>
+    </div>
+    <div class="guest-table-wrap">
+      <table class="guest-table">
+        <thead>
+          <tr>
+            <th>お名前</th>
+            <th>グループ</th>
+            <th>招待状</th>
+            <th>出欠</th>
+            <th>食事制限</th>
+            <th>テーブル</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="guest-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── DECISIONS ── -->
+  <section id="decisions" class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">CONFIRMED</div>
+      <div class="section-title">決定事項</div>
+      <div class="section-divider"><span>✦</span></div>
+    </div>
+    <div style="margin-bottom:28px">
+      <button id="add-dec-btn" class="btn btn-gold">＋ 決定事項を追加</button>
+    </div>
+    <div id="decisions-grid" class="decisions-grid"></div>
+  </section>
+
+  <!-- ── TIMELINE ── -->
+  <section id="timeline" class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">APRIL 24, 2027 &nbsp; 16:30 – 19:00</div>
+      <div class="section-title">当日タイムライン</div>
+      <div class="section-divider"><span>✦</span></div>
+    </div>
+    <div style="margin-bottom:36px">
+      <button id="add-tl-btn" class="btn btn-gold">＋ 追加</button>
+    </div>
+    <div id="timeline-wrap" class="timeline-wrap"></div>
+  </section>
+
+  <!-- ── PHOTOS ── -->
+  <section id="photos" class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">INSPIRATION</div>
+      <div class="section-title">写真・イメージ</div>
+      <div class="section-divider"><span>✦</span></div>
+    </div>
+
+    <div class="photo-upload-bar">
+      <select id="photo-cat-select" class="filter-select">
+        <option>ドレス</option><option>装花</option><option>会場</option>
+        <option>料理</option><option>その他</option>
+      </select>
+      <input id="photo-note-input" class="search-input" type="text" placeholder="メモ（任意）" style="width:200px">
+      <label class="btn btn-gold" style="cursor:pointer">
+        ＋ 写真を追加
+        <input id="photo-upload" type="file" accept="image/*" style="display:none">
+      </label>
+      <div style="flex:1"></div>
+      <select id="filter-photo-cat" class="filter-select">
+        <option value="">すべて表示</option>
+        <option>ドレス</option><option>装花</option><option>会場</option>
+        <option>料理</option><option>その他</option>
+      </select>
+    </div>
+
+    <div id="photo-grid" class="photo-grid"></div>
+  </section>
+
+</main>
+
+<!-- MODAL -->
+<div id="modal-overlay" class="modal-overlay">
+  <div class="modal">
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- Firebase CDN -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="app.js"></script>
+<script src="firebase-config.js"></script>
+</body>
+</html>

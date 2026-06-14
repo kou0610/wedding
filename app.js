@@ -203,7 +203,7 @@ let guests = {};
 const GUEST_GROUPS  = [
   '後藤家', '小澤家',
   'シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', '開成', '東大王', 'インフルエンサー',
-  'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ',
+  'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ', '同期',
   'その他'
 ];
 const ATTEND_OPTS = ['未確認', '出席', '欠席'];
@@ -212,7 +212,7 @@ const GROUP_ORDER = [
   '後藤家', '小澤家',
   'シスC', '茂木研', '学科同期（共通）',
   'bestiee（弘）', '開成', '東大王', 'インフルエンサー',
-  'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ',
+  'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ', '同期',
   'その他'
 ];
 
@@ -232,6 +232,7 @@ const GROUP_COLORS = {
   'TED x UTokyo':  { text: '#dc7878', bg: 'rgba(220,120,120,0.10)', border: 'rgba(220,120,120,0.30)' },
   'ECM':           { text: '#78c890', bg: 'rgba(120,200,144,0.10)', border: 'rgba(120,200,144,0.30)' },
   'パリ':           { text: '#b4a0dc', bg: 'rgba(180,160,220,0.10)', border: 'rgba(180,160,220,0.30)' },
+  '同期':           { text: '#60c8a0', bg: 'rgba(96,200,160,0.10)',  border: 'rgba(96,200,160,0.30)'  },
   'その他':        { text: '#7a7090', bg: 'rgba(90,80,112,0.10)',   border: 'rgba(90,80,112,0.30)'   },
 };
 

@@ -229,25 +229,47 @@ function renderGuests() {
   );
 
   if (!items.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic">見つかりません</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-style:italic">見つかりません</td></tr>`;
     return;
   }
 
+  const sideOpts = ['弘', '凜', '共通'];
   tbody.innerHTML = items.map(([id, g]) => {
-    const ac = g.attendance === '出席' ? 'attend-yes' : g.attendance === '欠席' ? 'attend-no' : 'attend-pending';
+    const acClass = g.attendance === '出席' ? 'sel-yes' : g.attendance === '欠席' ? 'sel-no' : '';
     return `<tr>
       <td style="color:var(--cream)">${esc(g.name || '')}</td>
+      <td>
+        <select class="inline-select" onchange="updateGuestField('${id}','side',this.value)">
+          <option value="">—</option>
+          ${sideOpts.map(o => `<option value="${o}" ${g.side===o?'selected':''}>${o}</option>`).join('')}
+        </select>
+      </td>
       <td><span class="tag tag-cat" style="font-size:9px">${esc(g.group || '')}</span></td>
-      <td style="text-align:center"><span class="invite-dot ${g.invitationSent ? 'dot-sent' : 'dot-unsent'}" title="${g.invitationSent ? '送付済み' : '未送付'}"></span></td>
-      <td><span class="attend-badge ${ac}">${esc(g.attendance || '未確認')}</span></td>
+      <td style="text-align:center">
+        <input type="checkbox" class="inline-check" ${g.contacted ? 'checked' : ''} onchange="updateGuestField('${id}','contacted',this.checked)">
+      </td>
+      <td>
+        <select class="inline-select ${acClass}" onchange="updateGuestField('${id}','attendance',this.value)">
+          <option value="未確認" ${(!g.attendance||g.attendance==='未確認')?'selected':''}>未確認</option>
+          <option value="出席" ${g.attendance==='出席'?'selected':''}>出席</option>
+          <option value="欠席" ${g.attendance==='欠席'?'selected':''}>欠席</option>
+        </select>
+      </td>
+      <td style="text-align:center">
+        <span class="invite-dot ${g.invitationSent ? 'dot-sent' : 'dot-unsent'}" title="${g.invitationSent ? '送付済み' : '未送付'}"></span>
+      </td>
       <td style="font-size:12px">${esc(g.mealRestriction || '—')}</td>
-      <td style="font-size:12px">${g.tableNumber ? 'Table ' + g.tableNumber : '—'}</td>
       <td>
         <button class="btn btn-ghost btn-sm" onclick="openGuestModal('${id}')">編集</button>
         <button class="btn btn-danger btn-sm" onclick="delGuest('${id}')">削除</button>
       </td>
     </tr>`;
   }).join('');
+}
+
+function updateGuestField(id, field, value) {
+  const g = guests[id];
+  if (g) dbSet('guests', id, { ...g, [field]: value });
 }
 
 function renderGuestStats() {
@@ -265,22 +287,24 @@ function delGuest(id) {
 function openGuestModal(id = null) {
   const g = id ? guests[id] : null;
   showModal('ゲストを' + (id ? '編集' : '追加'), [
-    { id: 'g-name',   label: 'お名前',             type: 'text',   value: g?.name            || '' },
-    { id: 'g-group',  label: 'グループ',           type: 'select', value: g?.group           || '', opts: GUEST_GROUPS },
-    { id: 'g-invite', label: '招待状',             type: 'select', value: g?.invitationSent ? '送付済み' : '未送付', opts: ['未送付', '送付済み'] },
-    { id: 'g-attend', label: '出欠',               type: 'select', value: g?.attendance      || '未確認', opts: ATTEND_OPTS },
-    { id: 'g-meal',   label: '食事制限・アレルギー', type: 'text',   value: g?.mealRestriction || '' },
-    { id: 'g-table',  label: 'テーブル番号',       type: 'number', value: g?.tableNumber     || '' },
+    { id: 'g-name',    label: 'お名前',              type: 'text',   value: g?.name            || '' },
+    { id: 'g-side',    label: '属性',                type: 'select', value: g?.side            || '', opts: ['弘', '凜', '共通'] },
+    { id: 'g-group',   label: 'グループ',            type: 'select', value: g?.group           || '', opts: GUEST_GROUPS },
+    { id: 'g-contact', label: '連絡',                type: 'select', value: g?.contacted ? '済み' : '未', opts: ['未', '済み'] },
+    { id: 'g-attend',  label: '出欠',                type: 'select', value: g?.attendance      || '未確認', opts: ATTEND_OPTS },
+    { id: 'g-invite',  label: '招待状',              type: 'select', value: g?.invitationSent ? '送付済み' : '未送付', opts: ['未送付', '送付済み'] },
+    { id: 'g-meal',    label: '食事制限・アレルギー', type: 'text',   value: g?.mealRestriction || '' },
   ], () => {
     const name = document.getElementById('g-name').value.trim();
     if (!name) return;
     dbSet('guests', id || genId(), {
       name,
+      side:             document.getElementById('g-side').value,
       group:            document.getElementById('g-group').value,
-      invitationSent:   document.getElementById('g-invite').value === '送付済み',
+      contacted:        document.getElementById('g-contact').value === '済み',
       attendance:       document.getElementById('g-attend').value,
+      invitationSent:   document.getElementById('g-invite').value === '送付済み',
       mealRestriction:  document.getElementById('g-meal').value.trim(),
-      tableNumber:      document.getElementById('g-table').value || null,
       createdAt: g?.createdAt || Date.now(),
     });
     closeModal();

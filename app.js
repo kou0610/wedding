@@ -262,28 +262,29 @@ function renderGuests() {
       const rows = members.map(([id, g]) => {
         const acClass = g.attendance === '出席' ? 'sel-yes' : g.attendance === '欠席' ? 'sel-no' : '';
         return `<tr>
-          <td style="color:var(--cream)">${esc(g.name || '')}</td>
-          <td>
+          <td class="gtd-name" style="color:var(--cream)">${esc(g.name || '')}</td>
+          <td class="gtd-side">
             <select class="inline-select" onchange="updateGuestField('${id}','side',this.value)">
               <option value="">—</option>
               ${sideOpts.map(o => `<option ${g.side===o?'selected':''}>${o}</option>`).join('')}
             </select>
           </td>
-          <td style="text-align:center">
+          <td class="gtd-break" aria-hidden="true"></td>
+          <td class="gtd-contact">
             <input type="checkbox" class="inline-check" ${g.contacted?'checked':''} onchange="updateGuestField('${id}','contacted',this.checked)">
           </td>
-          <td>
+          <td class="gtd-attend">
             <select class="inline-select ${acClass}" onchange="updateGuestField('${id}','attendance',this.value)">
               <option value="未確認" ${(!g.attendance||g.attendance==='未確認')?'selected':''}>未確認</option>
               <option value="出席" ${g.attendance==='出席'?'selected':''}>出席</option>
               <option value="欠席" ${g.attendance==='欠席'?'selected':''}>欠席</option>
             </select>
           </td>
-          <td style="text-align:center">
+          <td class="gtd-invite" style="text-align:center">
             <span class="invite-dot ${g.invitationSent?'dot-sent':'dot-unsent'}"></span>
           </td>
-          <td style="font-size:12px">${esc(g.mealRestriction || '—')}</td>
-          <td>
+          <td class="gtd-note" style="font-size:12px">${esc(g.mealRestriction || '—')}</td>
+          <td class="gtd-actions">
             <button class="btn btn-ghost btn-sm" onclick="openGuestModal('${id}')">編集</button>
             <button class="btn btn-danger btn-sm" onclick="delGuest('${id}')">削除</button>
           </td>

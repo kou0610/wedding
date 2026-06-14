@@ -202,7 +202,7 @@ on('filter-todo-status', 'change', renderTodos);
 let guests = {};
 const GUEST_GROUPS  = [
   '後藤家', '小澤家',
-  'シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', '開成', '東大王',
+  'シスC', '茂木研', '学科同期（共通）', 'bestiee（弘）', '開成', '東大王', 'インフルエンサー',
   'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ',
   'その他'
 ];
@@ -211,7 +211,7 @@ const ATTEND_OPTS = ['未確認', '出席', '欠席'];
 const GROUP_ORDER = [
   '後藤家', '小澤家',
   'シスC', '茂木研', '学科同期（共通）',
-  'bestiee（弘）', '開成', '東大王',
+  'bestiee（弘）', '開成', '東大王', 'インフルエンサー',
   'GS（凜）', '中学・高校同期', 'AIESEC', 'TED x UTokyo', 'ECM', 'パリ',
   'その他'
 ];
@@ -225,6 +225,7 @@ const GROUP_COLORS = {
   'bestiee（弘）': { text: '#dcaa50', bg: 'rgba(220,170,80,0.10)',  border: 'rgba(220,170,80,0.30)'  },
   '開成':          { text: '#78b4a0', bg: 'rgba(120,180,160,0.10)', border: 'rgba(120,180,160,0.30)' },
   '東大王':        { text: '#e8c040', bg: 'rgba(232,192,64,0.10)',  border: 'rgba(232,192,64,0.30)'  },
+  'インフルエンサー': { text: '#f080a0', bg: 'rgba(240,128,160,0.10)', border: 'rgba(240,128,160,0.30)' },
   'GS（凜）':      { text: '#c878b4', bg: 'rgba(200,120,180,0.10)', border: 'rgba(200,120,180,0.30)' },
   '中学・高校同期': { text: '#e09060', bg: 'rgba(224,144,96,0.10)',  border: 'rgba(224,144,96,0.30)'  },
   'AIESEC':        { text: '#6890dc', bg: 'rgba(104,144,220,0.10)', border: 'rgba(104,144,220,0.30)' },
